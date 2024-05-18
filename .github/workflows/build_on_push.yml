@@ -13,6 +13,7 @@ jobs:
           cache: 'maven'
       - name: Build with Maven
         run: mvn -B install --file pom.xml
+        
       - name: Generate site
         run: mvn jacoco:prepare-agent install jacoco:report
 
@@ -23,6 +24,7 @@ jobs:
           generate-branches-badge: true
           jacoco-csv-file: target/site/jacoco/jacoco.csv
           badges-directory: .github/badges
+          
       - name: Add badges
         run: git add .github/badges
 
@@ -31,8 +33,9 @@ jobs:
           git config --global user.name 'github-actions'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m "Added coverage badges" -a || true
+          
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: develop
+          branch: ${{ github.head_ref }}
